@@ -2,18 +2,78 @@ package view;
 
 import db.EmployeeDB;
 import models.Employee;
+import util.HRManagerUtil;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Scanner;
 
 public class View {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static EmployeeDB db = new EmployeeDB();
-
+    private static final String LINE = "--------------------------------------";
 
 
     /**
      * Show the interface to add a employee to the db
      */
     public void showAddEmployee() {
+
+        System.out.println(LINE);
+        System.out.println("-------------" + " Add Employee " + "-------------");
+        System.out.println(LINE);
+        Employee employee = new Employee();
+        System.out.print("Enter Surname of the Employee:  ");
+        employee.setSurname(scanner.nextLine());
+        System.out.print("Enter Prename of the Employee:  ");
+        employee.setPrename(scanner.nextLine());
+        System.out.print("Enter Jobdescription of the Employee:  ");
+        employee.setJobDescription(scanner.nextLine());
+        System.out.print("Enter Salery of the Employee:  ");
+        employee.setSalary(scanner.nextDouble());
+        System.out.print("Enter Birthday of the Employee Format:(dd.MM.yyyy):  ");
+        String birthday = scanner.next();
+        Date employeeBirthdate = null;
+        try {
+            employeeBirthdate = HRManagerUtil.formatter.parse(birthday);
+        }catch (ParseException e){
+            e.printStackTrace();
+            System.out.println("Wrong Dateformat");
+        }
+        employee.setBirthdate(employeeBirthdate);
+
+
+        System.out.print("Enter Employement Date of the Employee. Format:(dd.MM.yyyy):  ");
+        String employementDate = scanner.next();
+        Date employementDate2 = null;
+        try {
+            employementDate2 = HRManagerUtil.formatter.parse(employementDate);
+        }catch (ParseException e){
+            e.printStackTrace();
+            System.out.println("Wrong Dateformat");
+        }
+        employee.setEmploymentDate(employementDate2);
+
+
+
+       /* Datum aus dem Scanner lesen, und im User speichern
+        System.out.print("Enter Birthdate of the Employee:  ");
+        String employeeBirthdate = scanner.nextLine();
+        String format = "dd.MM.yyyy";
+        try{
+             birthdate = new SimpleDateFormat(format).parse(scanner.nextLine());
+        }catch (Exception e){
+            System.out.println("Falsches Datum");
+        }
+
+*/
+       db.addEmployee(employee);
+
         //TODO: implement
     }
 
@@ -21,20 +81,84 @@ public class View {
      * Show the interface to edit a employee to the db
      */
     public void showEditEmployee() {
-        //TODO: implement
+        System.out.println(LINE);
+        System.out.println("-------------" + " Edit Employee " + "-------------");
+        System.out.println(LINE);
+        System.out.println("Enter the ID of the employee, which you would like to edit:  ");
+        String editEmployeId = scanner.nextLine();
+        List <Employee> employeeList = db.getEmployees();
+        Employee editEmployee = null;
+        int indexOfEmployee = 0;
+        for(Employee singleEmployee : employeeList){
+            if(singleEmployee.getId().equals(editEmployeId)){
+                editEmployee = singleEmployee;
+                System.out.println(editEmployee.getPrename());
+            }
+        }
+        System.out.println("Prename: " +editEmployee.getPrename());
+        System.out.println("Change? (Y/N): ");
+        char decisino = scanner.next().charAt(0);
+        switch (decisino){
+            case 'Y':
+                System.out.print("New Prename:  ");
+                String newPrename = scanner.nextLine();
+                editEmployee.setPrename(newPrename);
+                break;
+            case 'N':
+                System.out.println("Nothing to change");
+                break;
+        }
+        String temp = scanner.nextLine();
+        editEmployee.setPrename(temp);
+        db.updateEmployee(editEmployee);
     }
 
     /**
      * Show the list of all employees from the db
      */
     public void showListEmployees() {
-        //TODO: implement
+        List <Employee> employeeList = db.getEmployees();
+        System.out.println("****************************************************************");
+        for(Employee singleEmployee: employeeList){
+            System.out.println("Prename: "+singleEmployee.getPrename());
+            System.out.println("Surname: "+singleEmployee.getSurname());
+            System.out.println("Birthdate: "+singleEmployee.getBirthdate());
+            System.out.println("Salery: "+singleEmployee.getSalary());
+            System.out.println("Job Description: "+singleEmployee.getJobDescription());
+            System.out.println("Employement Date: "+singleEmployee.getEmploymentDate());
+            System.out.println("Employee ID: "+singleEmployee.getId());
+            System.out.println("****************************************************************");
+
+        }
     }
 
     /**
      * Show the interface to delete a employee
      */
     public void showDeleteEmployee() {
+        System.out.println(LINE);
+        System.out.println("-------------" + " Delete Employee " + "-------------");
+        System.out.println(LINE);
+        System.out.println("Enter ID from Employee which you want to delete: ");
+        String id = scanner.nextLine();
+        int index;
+        List <Employee> employeeList = db.getEmployees();
+        Employee employeeToDelete = null;
+        for(Employee employee : employeeList){
+            System.out.println(employee.getId());
+
+            if(employee.getId().equals(id)){
+                employeeToDelete = employee;
+                index = employeeList.indexOf(employee);
+
+
+
+            }
+        }
+        if(employeeToDelete != null) {
+            db.deleteEmployee(employeeToDelete);
+        }
+
         //TODO: implement
     }
 

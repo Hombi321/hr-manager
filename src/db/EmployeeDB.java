@@ -17,10 +17,12 @@ public class EmployeeDB {
     }
 
     public void addEmployee(Employee employee) {
-        //TODO: Implement
+        employees.add(employee);
     }
 
     public void deleteEmployee(Employee employee) {
+        System.out.println("Delte Employe by iD.  "+ employee.getId());
+        employees.remove(employee);
         //TODO: Implement
     }
 
