@@ -15,6 +15,7 @@ public class Employee {
     private Date employmentDate;
 
     public Employee() {
+
     }
 
     public Employee(String prename, String surname, String jobDescription, Date birthdate, Double salary, Date employmentDate) {

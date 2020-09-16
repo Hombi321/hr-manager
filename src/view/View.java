@@ -23,57 +23,60 @@ public class View {
      * Show the interface to add a employee to the db
      */
     public void showAddEmployee() {
+        String surname;
+        String prename;
+        String jobDescription;
+        double salery = 0.0;
+        Date birthday = null;
+        Date employementDate = null;
+        boolean realSalery = false;
+        boolean realBirthday = false;
+        boolean realEmploymentDate = false;
 
+        Employee employee = new Employee();
         System.out.println(LINE);
         System.out.println("-------------" + " Add Employee " + "-------------");
         System.out.println(LINE);
-        Employee employee = new Employee();
+
         System.out.print("Enter Surname of the Employee:  ");
-        employee.setSurname(scanner.nextLine());
+        surname = scanner.nextLine();
         System.out.print("Enter Prename of the Employee:  ");
-        employee.setPrename(scanner.nextLine());
+        prename = scanner.nextLine();
         System.out.print("Enter Jobdescription of the Employee:  ");
-        employee.setJobDescription(scanner.nextLine());
+        jobDescription = scanner.nextLine();
         System.out.print("Enter Salery of the Employee:  ");
-        employee.setSalary(scanner.nextDouble());
-        System.out.print("Enter Birthday of the Employee Format:(dd.MM.yyyy):  ");
-        String birthday = scanner.next();
-        Date employeeBirthdate = null;
-        try {
-            employeeBirthdate = HRManagerUtil.formatter.parse(birthday);
-        }catch (ParseException e){
-            e.printStackTrace();
-            System.out.println("Wrong Dateformat");
+        while(!scanner.hasNextDouble()) {
+            scanner.next();
+            System.out.println("Wrong salery try again");
         }
-        employee.setBirthdate(employeeBirthdate);
+            salery = scanner.nextDouble();
 
-
-        System.out.print("Enter Employement Date of the Employee. Format:(dd.MM.yyyy):  ");
-        String employementDate = scanner.next();
-        Date employementDate2 = null;
-        try {
-            employementDate2 = HRManagerUtil.formatter.parse(employementDate);
-        }catch (ParseException e){
-            e.printStackTrace();
-            System.out.println("Wrong Dateformat");
-        }
-        employee.setEmploymentDate(employementDate2);
-
-
-
-       /* Datum aus dem Scanner lesen, und im User speichern
-        System.out.print("Enter Birthdate of the Employee:  ");
-        String employeeBirthdate = scanner.nextLine();
-        String format = "dd.MM.yyyy";
-        try{
-             birthdate = new SimpleDateFormat(format).parse(scanner.nextLine());
-        }catch (Exception e){
-            System.out.println("Falsches Datum");
+        while(realBirthday == false){
+            System.out.print("Enter Birthday of the Employee Format:(dd.MM.yyyy):  ");
+            String userInput = scanner.next();
+            try{
+                birthday = HRManagerUtil.formatter.parse(userInput);
+                realBirthday = true;
+            } catch (ParseException e) {
+                System.out.println("Invalid Dateformat pleas try again");
+                realBirthday = false;
+            }
         }
 
-*/
-       db.addEmployee(employee);
+        while (realEmploymentDate == false){
+            System.out.print("Enter Employement Date of the Employee. Format:(dd.MM.yyyy):  ");
+            String userInput = scanner.next();
 
+            try{
+                employementDate = HRManagerUtil.formatter.parse(userInput);
+                realEmploymentDate = true;
+            } catch (ParseException e) {
+                System.out.println("Invalid Dateformat pleas try again");
+                realEmploymentDate = false;
+            }
+        }
+        Employee e = new Employee(prename, surname, jobDescription, birthday, salery, employementDate);
+        db.addEmployee(e);
         //TODO: implement
     }
 
@@ -86,19 +89,19 @@ public class View {
         System.out.println(LINE);
         System.out.println("Enter the ID of the employee, which you would like to edit:  ");
         String editEmployeId = scanner.nextLine();
-        List <Employee> employeeList = db.getEmployees();
+        List<Employee> employeeList = db.getEmployees();
         Employee editEmployee = null;
         int indexOfEmployee = 0;
-        for(Employee singleEmployee : employeeList){
-            if(singleEmployee.getId().equals(editEmployeId)){
+        for (Employee singleEmployee : employeeList) {
+            if (singleEmployee.getId().equals(editEmployeId)) {
                 editEmployee = singleEmployee;
                 System.out.println(editEmployee.getPrename());
             }
         }
-        System.out.println("Prename: " +editEmployee.getPrename());
+        System.out.println("Prename: " + editEmployee.getPrename());
         System.out.println("Change? (Y/N): ");
         char decisino = scanner.next().charAt(0);
-        switch (decisino){
+        switch (decisino) {
             case 'Y':
                 System.out.print("New Prename:  ");
                 String newPrename = scanner.nextLine();
@@ -117,16 +120,16 @@ public class View {
      * Show the list of all employees from the db
      */
     public void showListEmployees() {
-        List <Employee> employeeList = db.getEmployees();
+        List<Employee> employeeList = db.getEmployees();
         System.out.println("****************************************************************");
-        for(Employee singleEmployee: employeeList){
-            System.out.println("Prename: "+singleEmployee.getPrename());
-            System.out.println("Surname: "+singleEmployee.getSurname());
-            System.out.println("Birthdate: "+singleEmployee.getBirthdate());
-            System.out.println("Salery: "+singleEmployee.getSalary());
-            System.out.println("Job Description: "+singleEmployee.getJobDescription());
-            System.out.println("Employement Date: "+singleEmployee.getEmploymentDate());
-            System.out.println("Employee ID: "+singleEmployee.getId());
+        for (Employee singleEmployee : employeeList) {
+            System.out.println("Prename: " + singleEmployee.getPrename());
+            System.out.println("Surname: " + singleEmployee.getSurname());
+            System.out.println("Birthdate: " + singleEmployee.getBirthdate());
+            System.out.println("Salery: " + singleEmployee.getSalary());
+            System.out.println("Job Description: " + singleEmployee.getJobDescription());
+            System.out.println("Employement Date: " + singleEmployee.getEmploymentDate());
+            System.out.println("Employee ID: " + singleEmployee.getId());
             System.out.println("****************************************************************");
 
         }
@@ -142,20 +145,19 @@ public class View {
         System.out.println("Enter ID from Employee which you want to delete: ");
         String id = scanner.nextLine();
         int index;
-        List <Employee> employeeList = db.getEmployees();
+        List<Employee> employeeList = db.getEmployees();
         Employee employeeToDelete = null;
-        for(Employee employee : employeeList){
+        for (Employee employee : employeeList) {
             System.out.println(employee.getId());
 
-            if(employee.getId().equals(id)){
+            if (employee.getId().equals(id)) {
                 employeeToDelete = employee;
                 index = employeeList.indexOf(employee);
 
 
-
             }
         }
-        if(employeeToDelete != null) {
+        if (employeeToDelete != null) {
             db.deleteEmployee(employeeToDelete);
         }
 
@@ -164,6 +166,7 @@ public class View {
 
     /**
      * Internal method to print out a employee
+     *
      * @param employee to show
      */
     private void showEmployee(Employee employee) {
