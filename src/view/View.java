@@ -45,16 +45,16 @@ public class View {
         System.out.print("Enter Jobdescription of the Employee:  ");
         jobDescription = scanner.nextLine();
         System.out.print("Enter Salery of the Employee:  ");
-        while(!scanner.hasNextDouble()) {
+        while (!scanner.hasNextDouble()) {
             scanner.next();
             System.out.println("Wrong salery try again");
         }
-            salery = scanner.nextDouble();
+        salery = scanner.nextDouble();
 
-        while(realBirthday == false){
+        while (realBirthday == false) {
             System.out.print("Enter Birthday of the Employee Format:(dd.MM.yyyy):  ");
             String userInput = scanner.next();
-            try{
+            try {
                 birthday = HRManagerUtil.formatter.parse(userInput);
                 realBirthday = true;
             } catch (ParseException e) {
@@ -63,11 +63,11 @@ public class View {
             }
         }
 
-        while (realEmploymentDate == false){
+        while (realEmploymentDate == false) {
             System.out.print("Enter Employement Date of the Employee. Format:(dd.MM.yyyy):  ");
             String userInput = scanner.next();
 
-            try{
+            try {
                 employementDate = HRManagerUtil.formatter.parse(userInput);
                 realEmploymentDate = true;
             } catch (ParseException e) {
@@ -98,10 +98,43 @@ public class View {
                 System.out.println(editEmployee.getPrename());
             }
         }
+
+        System.out.println("Which Point do you want to change?");
+        while (!scanner.hasNextInt()){
+            System.out.println("Incorrect Value try again");
+        }
+        int userDecision = scanner.nextInt();
+
+        switch (userDecision){
+            case 1:
+                System.out.println("Prename:  "+ editEmployee.getPrename());
+                System.out.println("New Prename: ");
+                editEmployee.setPrename(scanner.nextLine());
+                break;
+            case 2:
+                System.out.println("Surname:  "+ editEmployee.getSurname());
+                System.out.println("New Surname: ");
+                editEmployee.setSurname(scanner.nextLine());
+                break;
+            case 3:
+                System.out.println("Salery:  "+ editEmployee.getSalary());
+                System.out.println("New Salery: ");
+                while (!scanner.hasNextDouble()) {
+                    scanner.next();
+                    System.out.println("Wrong salery try again");
+                }
+                editEmployee.setSalary(scanner.nextDouble());
+                break;
+            default:
+                System.out.println("Invalid Number");
+                break;
+
+
+        }
         System.out.println("Prename: " + editEmployee.getPrename());
         System.out.println("Change? (Y/N): ");
-        char decisino = scanner.next().charAt(0);
-        switch (decisino) {
+        char decision = scanner.next().charAt(0);
+        switch (decision) {
             case 'Y':
                 System.out.print("New Prename:  ");
                 String newPrename = scanner.nextLine();
@@ -110,6 +143,7 @@ public class View {
             case 'N':
                 System.out.println("Nothing to change");
                 break;
+
         }
         String temp = scanner.nextLine();
         editEmployee.setPrename(temp);
@@ -123,14 +157,7 @@ public class View {
         List<Employee> employeeList = db.getEmployees();
         System.out.println("****************************************************************");
         for (Employee singleEmployee : employeeList) {
-            System.out.println("Prename: " + singleEmployee.getPrename());
-            System.out.println("Surname: " + singleEmployee.getSurname());
-            System.out.println("Birthdate: " + singleEmployee.getBirthdate());
-            System.out.println("Salery: " + singleEmployee.getSalary());
-            System.out.println("Job Description: " + singleEmployee.getJobDescription());
-            System.out.println("Employement Date: " + singleEmployee.getEmploymentDate());
-            System.out.println("Employee ID: " + singleEmployee.getId());
-            System.out.println("****************************************************************");
+            showEmployee(singleEmployee);
 
         }
     }
@@ -148,20 +175,15 @@ public class View {
         List<Employee> employeeList = db.getEmployees();
         Employee employeeToDelete = null;
         for (Employee employee : employeeList) {
-            System.out.println(employee.getId());
 
             if (employee.getId().equals(id)) {
                 employeeToDelete = employee;
                 index = employeeList.indexOf(employee);
-
-
             }
         }
         if (employeeToDelete != null) {
             db.deleteEmployee(employeeToDelete);
         }
-
-        //TODO: implement
     }
 
     /**
@@ -170,7 +192,19 @@ public class View {
      * @param employee to show
      */
     private void showEmployee(Employee employee) {
-        //TODO: implement
+
+
+            System.out.println("Prename: " + employee.getPrename());
+            System.out.println("Surname: " + employee.getSurname());
+            System.out.println("Birthdate: " + employee.getBirthdate());
+            System.out.println("Salery: " + employee.getSalary());
+            System.out.println("Job Description: " + employee.getJobDescription());
+            System.out.println("Employement Date: " + employee.getEmploymentDate());
+            System.out.println("Employee ID: " + employee.getId());
+            System.out.println("****************************************************************");
+
+
+
     }
 
 }
